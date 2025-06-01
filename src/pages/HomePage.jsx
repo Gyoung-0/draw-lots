@@ -8,8 +8,10 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   const handleCreate = async () => {
-    if (!title) return;
-    const id = await createRoom(title);
+    if (!title.trim()) return alert("제목을 입력해주세요!");
+    const id = await createRoom(title.trim());
+    const updatedRooms = await getAllRooms();   // ✅ 방 목록 갱신
+    setRooms(updatedRooms);
     navigate(`/room/${id}`);
   };
 

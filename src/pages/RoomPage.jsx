@@ -26,7 +26,7 @@ export default function RoomPage() {
 
   const handleAdd = () => {
     if (!name || !damage || isNaN(damage)) return;
-    const newParticipant = { name, damage: parseInt(damage) };
+    const newParticipant = { name, damage: parseFloat(damage) };
     const updated = {
       ...room,
       participants: [...room.participants, newParticipant],

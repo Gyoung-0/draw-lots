@@ -1,21 +1,28 @@
 // src/pages/HomePage.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { saveRoom, getAllRooms } from "../utils/storage";
+import { createRoom, getAllRooms } from "../utils/firebaseStorage";
 import { Link } from "react-router-dom";
 
 export default function HomePage() {
   const [title, setTitle] = useState("");
+  const [rooms, setRooms] = useState([]);
   const navigate = useNavigate();
 
-  const handleCreate = () => {
-    const id = Date.now().toString();
-    const newRoom = { id, title, participants: [], ended: false }; // 🔥 key 제거
-    saveRoom(newRoom);
+  const handleCreate = async () => {
+    if (!title.trim()) return;
+    const id = await createRoom(title);
     navigate(`/room/${id}`);
   };
 
-  const rooms = getAllRooms();
+  const fetchRooms = async () => {
+    const result = await getAllRooms();
+    setRooms(result);
+  };
+
+  useEffect(() => {
+    fetchRooms();
+  }, []);
 
   return (
     <div style={{ padding: "2rem" }}>
@@ -27,7 +34,7 @@ export default function HomePage() {
       />
       <button onClick={handleCreate}>방 만들기</button>
 
-      <h3>📄 기존 방 목록</h3>
+      <h3>📄 기존 글 목록</h3>
       <ul>
         {rooms.map((room) => (
           <li key={room.id}>

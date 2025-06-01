@@ -4,6 +4,7 @@ import {
   collection,
   addDoc,
   getDocs,
+  deleteDoc,
   doc,
   getDoc,
   updateDoc
@@ -17,6 +18,11 @@ export async function createRoom(title) {
   };
   const docRef = await addDoc(collection(db, "rooms"), newRoom);
   return docRef.id;
+}
+
+
+export async function deleteRoomById(id) {
+  await deleteDoc(doc(db, "rooms", id));
 }
 
 export async function getAllRooms() {

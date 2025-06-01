@@ -1,8 +1,6 @@
-// src/pages/HomePage.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createRoom, getAllRooms } from "../utils/firebaseStorage";
-import { Link } from "react-router-dom";
 
 export default function HomePage() {
   const [title, setTitle] = useState("");
@@ -10,23 +8,21 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   const handleCreate = async () => {
-    if (!title.trim()) return;
+    if (!title) return;
     const id = await createRoom(title);
     navigate(`/room/${id}`);
   };
 
-  const fetchRooms = async () => {
-    const result = await getAllRooms();
-    setRooms(result);
-  };
-
   useEffect(() => {
-    fetchRooms();
+    (async () => {
+      const result = await getAllRooms();
+      setRooms(result);
+    })();
   }, []);
 
   return (
     <div style={{ padding: "2rem" }}>
-      <h2>🎯 제비뽑기 방 만들기</h2>
+      <h2>🎯 제비뽑기 글 생성</h2>
       <input
         placeholder="제목"
         value={title}
@@ -38,7 +34,7 @@ export default function HomePage() {
       <ul>
         {rooms.map((room) => (
           <li key={room.id}>
-            <Link to={`/room/${room.id}`}>{room.title}</Link>
+            <a href={`/room/${room.id}`}>{room.title}</a>
           </li>
         ))}
       </ul>
